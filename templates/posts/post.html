@@ -20,6 +20,7 @@
         <th>Body</th>
         <th>Show</th>
         <th> Delete</th>
+        <th>image</th>
 
     </tr>
 {% for post in posts %}
@@ -27,10 +28,15 @@
     <td>{{post['id']}}</td>
     <td>{{post['title']}}</td>
     <td>{{post['body']}}</td>
+    <td>{{post['image']}}</td>
+    <td><mg src="{{post.image}}" class="card-img-top" ></td>
+
+
+    </td>
     <td><a href="{{url_for('post.show',id=post.id)}}" class="btn btn-info">show</a></td> 
     <td><a href="{{url_for('post.delete',id=post.id)}}" class="btn btn-danger">Delete</a></td> 
     <td><a href="{{url_for('post.update',id=post.id)}}" class="btn btn-secondary">Update</a></td> 
-
+    
     
     
 

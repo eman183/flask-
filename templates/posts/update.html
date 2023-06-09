@@ -6,21 +6,20 @@
     <h1> Add new product  </h1>
 
     <form method="post">
-    <!-- <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">ID</label>
-            <input type="number" name="id"  class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-            <div id="emailHelp" class="form-text"></div>
-          </div> -->
+
   <div class="mb-3">
-    <label for="exampleInputEmail1" class="form-label">Title</label>
-    <input type="text" name="title" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+    <label for="exampleInputEmail1"  class="form-label">Title</label>
+    <input type="text" name="title" value="{{post.title}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
     <div id="emailHelp" class="form-text"></div>
   </div>
   <div class="mb-3">
     <label for="exampleInputPassword1" class="form-label">BODY</label>
-    <input type="text"  name='body' class="form-control" id="exampleInputPassword1">
+    <input type="text"  name='body' value="{{post.body}}" class="form-control" id="exampleInputPassword1">
   </div>
-
+  <div class="mb-3">
+  
+    <input type="file" value="{{post.image}}"  name="file" multiple>
+  </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 {% endblock content %}

@@ -1,13 +1,15 @@
 from flask import Flask
-from flask import request,redirect,url_for
+from flask import request,redirect,url_for,session
 from sqlalchemy import Column, ForeignKey, Integer, Unicode
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String
-from flask import render_template, render_template_string, request
-# from sqlalchemy_imageattach.entity import Image, image_attachment
+from flask import render_template,request
+from werkzeug.utils import secure_filename
 app=Flask(__name__)
-
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 db=SQLAlchemy(app)
 
 class Post(db.Model):
@@ -15,18 +17,10 @@ class Post(db.Model):
      id=db.Column(db.Integer,primary_key=True)
      title=db.Column(db.String)
      body=db.Column(db.Text)
+     image=db.Column(db.String)
+     data=db.Column(db.LargeBinary)
 
 
-#      image = image_attachment('PostPicture')
-    
-# class PostPicture(db.Model):
-#     """User picture model."""
-
-#     user_id = db.Column(db.Integer, db.ForeignKey('Post.id'), primary_key=True)
-#     user = db.relationship('Post')
-#     __tablename__ = 'Post_picture'   
-    #  image=
-# get all posts
 @app.route("/posts",endpoint="posts.get")
 def get_all_posts():
       posts=Post.query.all()
@@ -44,7 +38,7 @@ def show_post(id):
  
 # delete post
 @app.route("/post/<int:id>/delete", endpoint="post.delete")
-def delete_product(id):
+def delete_post(id):
     post= Post.query.get_or_404(id)
     db.session.delete(post)
     db.session.commit()
@@ -56,37 +50,43 @@ def delete_product(id):
 #create post
 
 @app.route("/post/create",endpoint="post.create" ,methods = ["GET", "POST"])
-def create_product():
+def create_post():
     if request.method=="POST":
         print(request.form)
         post_id= request.form["id"]
         post_title= request.form["title"]
         post_body = request.form["body"]
-        post = Post(title=post_title, body= post_body,id=post_id)
+        file= request.files['file']
+        post = Post(title=post_title,image=file.filename,body= post_body,id=post_id)
         db.session.add(post)
         db.session.commit()
 
         return redirect(url_for('posts.get'))
 
-    ## request method GET ?
     return render_template("posts/create.html")
 
 @app.route("/post/<int:id>/update",endpoint="post.update" ,methods = ["GET", "POST"])
-def update_product(id):
-    if request.method=="POST":
-        post= Post.query.get_or_404(id)
-        print(post)
+def update_post(id):
+     post= Post.query.filter_by(id=id).first()
+     if request.method=="POST":
+     #    post= Post.query.get_or_404(id)
      #    Post.id= request.form["id"]
-        Post.title= request.form["title"]
-        Post.body = request.form["body"]
-        post = Post( title= Post.title,body=Post.body)
+
+       if post:
+        db.session.delete(post)
+        db.session.commit()
+        title= request.form["title"]
+        body = request.form["body"]
+        image = request.form["file"]
+
+        post = Post(id=id,title= title,image=image,body=body)
         db.session.add(post)
         db.session.commit()
 
         return redirect(url_for('posts.get'))
 
-    ## request method GET ?
-    return render_template("posts/update.html",)
+ 
+     return render_template("posts/update.html",post=post)
 
 if __name__=='__main__':
      app.run(debug=True)

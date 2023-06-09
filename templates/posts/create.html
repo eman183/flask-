@@ -3,9 +3,9 @@
 
 
 {% block content %}
-    <h1> Add new product  </h1>
+    <h1> Add new post </h1>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
     <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label">ID</label>
             <input type="number" name="id" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -20,6 +20,11 @@
     <label for="exampleInputPassword1" class="form-label">BODY</label>
     <input type="text"  name='body' class="form-control" id="exampleInputPassword1">
   </div>
+  <div class="mb-3">
+ 
+    <input type="file" name="file" multiple>
+  </div>
+  
 
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
