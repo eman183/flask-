@@ -57,7 +57,7 @@ def create_post():
         post_title= request.form["title"]
         post_body = request.form["body"]
         file= request.files['file']
-        post = Post(title=post_title,image=file.filename,body= post_body,id=post_id)
+        post = Post(title=post_title,image=file.filename,data=file.read(),body= post_body,id=post_id)
         db.session.add(post)
         db.session.commit()
 
